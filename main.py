@@ -5,7 +5,7 @@ pygame.init()
 
 
 def check_winner():
-    
+    pass
 
 FPS = 60
 COUNT_BLOCKS = 3
