@@ -3,10 +3,53 @@ import sys
 
 pygame.init()
 
+"""
+This func checking winner and return True if winner is.
+Also func return two tuples that has numbers rows and columns of 
+the start and the end line that end game
+"""
 
-def check_winner():
-    
 
+def check_winner(mas):
+    # Check in rows
+    for row in mas:
+        if 'o' not in row or 'x' not in row:
+            return True, (mas.index(row), 0), (mas.index(row), len(mas) - 1)
+    checker = 1
+    # Check in columns
+    for j in range(len(mas) - 1):
+        for i in range(len(mas) - 1):
+            if mas[i][j] == mas[i + 1][j]:
+                checker += 1
+        if checker == len(mas):
+            return True, (0, j), (len(mas) - 1, j)
+        checker = 1
+    """
+        x _ _
+        _ x _
+        _ _ x
+    """
+    for bord in range(len(mas) - 1):
+        if mas[bord][bord] == mas[bord + 1][bord + 1]:
+            checker += 1
+    if checker == len(mas):
+        return True, (0, 0), (len(mas) - 1, len(mas) - 1)
+    checker = 1
+    """
+        _ _ x
+        _ x _
+        x _ _
+    """
+    for bord in range(len(mas) - 1):
+        if mas[len(mas) - bord - 1][bord] == mas[len(mas) - bord - 2][bord + 1]:
+            checker += 1
+    if checker == len(mas):
+        return True, (len(mas) - 1, 0), (0, len(mas) - 1)
+
+    return False, (None, None), (None, None)  # If isn't winner return False and tuples with None
+
+
+# Add constants(colors, block and field parameters
 FPS = 60
 COUNT_BLOCKS = 3
 SIZE_BLOCK = 200
@@ -17,7 +60,9 @@ BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 resolution = (COUNT_BLOCKS * SIZE_BLOCK + MARGIN * (COUNT_BLOCKS - 1),
               COUNT_BLOCKS * SIZE_BLOCK + MARGIN * (COUNT_BLOCKS - 1))
+
 field = [[None] * COUNT_BLOCKS for i in range(COUNT_BLOCKS)]
+
 screen = pygame.display.set_mode(resolution)
 pygame.display.set_caption("Cross-zero")
 pygame.display.set_icon(pygame.image.load("icon.png"))
