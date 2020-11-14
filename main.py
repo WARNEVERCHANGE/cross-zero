@@ -3,7 +3,12 @@ import sys
 
 pygame.init()
 
-COUNT_BLOCKS = 4
+
+def check_winner():
+    
+
+FPS = 60
+COUNT_BLOCKS = 3
 SIZE_BLOCK = 200
 MARGIN = 3
 BG_COLOR = (12, 12, 204)
@@ -16,6 +21,8 @@ field = [[None] * COUNT_BLOCKS for i in range(COUNT_BLOCKS)]
 screen = pygame.display.set_mode(resolution)
 pygame.display.set_caption("Cross-zero")
 pygame.display.set_icon(pygame.image.load("icon.png"))
+clock = pygame.time.Clock()
+player_value_turn = 'x'
 
 while True:
     screen.fill(BG_COLOR)
@@ -39,5 +46,16 @@ while True:
             pygame.quit()
             sys.exit(0)
         elif event.type == pygame.MOUSEBUTTONDOWN:
-            pass
+            click_x, click_y = event.pos
+            column = click_x // SIZE_BLOCK
+            row = click_y // SIZE_BLOCK
+            if field[row][column] is None:
+                field[row][column] = player_value_turn
+            else:
+                print("Field isn't empty!")
+            if player_value_turn == 'x':
+                player_value_turn = 'o'
+            else:
+                player_value_turn = 'x'
+    clock.tick(FPS)
     pygame.display.update()
