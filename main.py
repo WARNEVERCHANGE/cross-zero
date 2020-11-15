@@ -13,16 +13,16 @@ the start and the end line that end game
 def check_winner(mas):
     # Check in rows
     for row in mas:
-        if 'o' not in row or 'x' not in row:
-            return True, (mas.index(row), 0), (mas.index(row), len(mas) - 1)
+        if ('o' not in row or 'x' not in row) and None not in row:
+            return [True, (mas.index(row), 0), (mas.index(row), len(mas) - 1)]
     checker = 1
     # Check in columns
     for j in range(len(mas) - 1):
         for i in range(len(mas) - 1):
-            if mas[i][j] == mas[i + 1][j]:
+            if mas[i][j] == mas[i + 1][j] and mas[i][j] is not None:
                 checker += 1
         if checker == len(mas):
-            return True, (0, j), (len(mas) - 1, j)
+            return [True, (0, j), (len(mas) - 1, j)]
         checker = 1
     """
         x _ _
@@ -30,10 +30,10 @@ def check_winner(mas):
         _ _ x
     """
     for bord in range(len(mas) - 1):
-        if mas[bord][bord] == mas[bord + 1][bord + 1]:
+        if mas[bord][bord] == mas[bord + 1][bord + 1] and mas[bord][bord] is not None:
             checker += 1
     if checker == len(mas):
-        return True, (0, 0), (len(mas) - 1, len(mas) - 1)
+        return [True, (0, 0), (len(mas) - 1, len(mas) - 1)]
     checker = 1
     """
         _ _ x
@@ -41,12 +41,13 @@ def check_winner(mas):
         x _ _
     """
     for bord in range(len(mas) - 1):
-        if mas[len(mas) - bord - 1][bord] == mas[len(mas) - bord - 2][bord + 1]:
+        if mas[len(mas) - bord - 1][bord] == mas[len(mas) - bord - 2][bord + 1]\
+                and mas[len(mas) - bord - 1][bord] is not None:
             checker += 1
     if checker == len(mas):
-        return True, (len(mas) - 1, 0), (0, len(mas) - 1)
+        return [True, (len(mas) - 1, 0), (0, len(mas) - 1)]
 
-    return False, (None, None), (None, None)  # If isn't winner return False and tuples with None
+    return [False, (None, None), (None, None)]  # If isn't winner return False and tuples with None
 
 
 # Add constants(colors, block and field parameters
@@ -58,6 +59,7 @@ BG_COLOR = (12, 12, 204)
 COLOR_BLOCK = (73, 73, 222)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
+BLACK = (0, 0, 0)
 resolution = (COUNT_BLOCKS * SIZE_BLOCK + MARGIN * (COUNT_BLOCKS - 1),
               COUNT_BLOCKS * SIZE_BLOCK + MARGIN * (COUNT_BLOCKS - 1))
 
@@ -85,7 +87,8 @@ while True:
             elif field[row][column] == 'o':
                 pygame.draw.circle(screen, BLUE, (x + (SIZE_BLOCK // 2), y + (SIZE_BLOCK // 2)),
                                    0.8 * SIZE_BLOCK / 2, 10)
-
+    if check_winner(field)[0]:
+        pass
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
@@ -102,5 +105,6 @@ while True:
                 player_value_turn = 'o'
             else:
                 player_value_turn = 'x'
+            print(field)
     clock.tick(FPS)
     pygame.display.update()
